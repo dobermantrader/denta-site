@@ -1107,3 +1107,106 @@ h4, .eyebrow, .hero__tag, .fear-label { font-family: 'Montserrat', sans-serif; }
 .hero__slide figcaption { left: 12%; right: -22px; bottom: -64px; }
 @media (max-width: 1020px) { .hero__slides { margin-bottom: 96px; } .hero__slide figcaption { left: 8%; right: 0; bottom: -80px; } }
 @media (max-width: 720px) { .hero__slides { margin-bottom: 200px; } .hero__slide figcaption { left: 6%; bottom: -186px; } }
+
+
+/* ============================================================
+   v14 — блоки главной по схеме «обещание → механика → доказательство → действие»
+   ============================================================ */
+
+/* рукописная вторая строка у любого h2 */
+h2 em {
+  display: block; font-family: 'Bad Script', 'Segoe Script', cursive;
+  font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0;
+  font-size: 0.6em; line-height: 1.15; color: var(--gold); margin-top: 0.15em;
+}
+.urgent--offer h2 em { color: #9db4f5; font-size: 0.62em; }
+
+/* Направления: ситуация пациента → направление → что получает → действие */
+.direction { gap: 8px; padding: 26px 24px 24px; }
+.direction__case { font-size: 0.8rem; font-style: italic; color: var(--ink-soft); }
+.direction h3 { margin-top: 2px; }
+.direction p { flex: 1; }
+.direction__win { display: block; font-size: 0.86rem; font-weight: 600; color: var(--ink-deep); padding: 10px 0 12px; border-top: 1px solid var(--line); margin-top: 6px; }
+.direction__actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.direction__actions .direction__go { text-decoration: none; margin: 0; }
+.direction__actions .btn--sm { text-transform: none; font-size: 0.82rem; letter-spacing: 0.01em; font-weight: 600; padding: 11px 18px; }
+a.direction__go:hover { text-decoration: underline; }
+
+/* Причины: 3×2 карточки, у каждой — строка-доказательство */
+.reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.reason {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 28px 26px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+}
+.reason__num { font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.18em; color: var(--gold); }
+.reason h3 { margin: 0; font-size: 1.18rem; }
+.reason p { margin: 0; color: var(--ink-soft); font-size: 0.94rem; flex: 1; }
+.reason__proof {
+  margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 0.8rem; font-weight: 600; color: var(--ink-deep);
+  display: flex; gap: 8px; align-items: baseline;
+}
+.reason__proof::before { content: '\2713'; color: var(--gold); flex: none; font-weight: 700; }
+
+/* Подпись-действие под блоком */
+.section-cta { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line); }
+.section-cta p { margin: 0; color: var(--ink-soft); font-size: 1.02rem; }
+
+/* Врачи: метка «есть отзывы» */
+.doctor__tag { display: inline-block; margin-top: 8px; font-size: 0.72rem; font-weight: 600; color: var(--gold); text-decoration: none; border: 1px solid var(--gold-pale); border-radius: 999px; padding: 3px 10px; }
+.doctor__tag:hover { background: var(--blush-soft); }
+
+/* Шаги на светлом фоне (протезирование, первый визит, после заявки) */
+.steps { list-style: none; margin: 26px 0 28px; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.steps li {
+  counter-increment: step;
+  display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; row-gap: 2px;
+  padding: 14px 0; border-top: 1px solid var(--line);
+}
+.steps li:last-child { border-bottom: 1px solid var(--line); }
+.steps li::before {
+  content: '0' counter(step); grid-row: 1 / span 2;
+  font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 1.15rem; letter-spacing: 0.12em; color: var(--gold); line-height: 1.3;
+}
+.steps b { font-weight: 700; color: var(--ink-deep); font-size: 1rem; }
+.steps span { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.45; }
+.steps--tight li { padding: 11px 0; }
+.steps--after { margin: 6px 0 28px; }
+
+/* Протезирование / прейскурант */
+.family h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.family > p { color: var(--ink-soft); }
+.family .service-block__list { margin: 0 0 30px; }
+.mini-price { background: var(--blush-soft); border-color: var(--gold-pale); }
+.mini-price__note { margin: 18px 0 0; font-size: 0.86rem; color: var(--ink-soft); }
+
+/* Первый визит */
+.space__facts { font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 24px; }
+.space-photos img:first-child { border-radius: var(--radius); height: 260px; }
+
+/* FAQ */
+.faq__more { margin: 26px 0 0; font-size: 0.98rem; color: var(--ink-soft); }
+.faq__more a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.faq__more a:hover { text-decoration: underline; }
+
+@media (max-width: 1020px) {
+  .reasons { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .reasons { grid-template-columns: 1fr; }
+  .direction__actions { flex-direction: column; align-items: stretch; }
+  .direction__actions .btn--sm { width: 100%; }
+  .section-cta .btn { width: 100%; }
+}
+
+/* v14.1 — карточка отзыва: позиция как в макете (v12), стекло ~90% прозрачности */
+.hero__slides { margin-bottom: 118px; }
+.hero__slide figcaption {
+  left: 30%; right: -26px; bottom: -104px;
+  background: rgba(255,255,255,0.12);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.55);
+}
+@media (max-width: 1020px) { .hero__slides { margin-bottom: 120px; } .hero__slide figcaption { left: 18%; right: 0; bottom: -104px; } }
+@media (max-width: 720px) { .hero__slides { margin-bottom: 196px; } .hero__slide figcaption { left: 8%; bottom: -182px; } }
