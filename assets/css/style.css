@@ -1210,3 +1210,15 @@ a.direction__go:hover { text-decoration: underline; }
 }
 @media (max-width: 1020px) { .hero__slides { margin-bottom: 120px; } .hero__slide figcaption { left: 18%; right: 0; bottom: -104px; } }
 @media (max-width: 720px) { .hero__slides { margin-bottom: 196px; } .hero__slide figcaption { left: 8%; bottom: -182px; } }
+
+/* v14.2 — фото врачей: прямоугольник со скруглением, как фото в hero */
+.doctor__photo, .doctor .avatar {
+  aspect-ratio: 4 / 4.4;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  filter: none;
+  background: var(--blush-soft);
+  object-position: 50% 15%;
+}
+.doctor .avatar { font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 2.4rem; letter-spacing: 0.06em; color: var(--gold); }
+.space-photos img { border-radius: 18px; }
