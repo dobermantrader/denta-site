@@ -15,8 +15,8 @@
   --ink: #3d2e2a;
   --ink-deep: #33231f;
   --ink-soft: #5c4a44;
-  --muted: #8a7a73;
-  --gold: #836a2c;
+  --muted: #6b5c55;
+  --gold: #785f24;
   --gold-light: #c4a96a;
   --gold-pale: #e9dcc0;
   --line: rgba(51, 35, 31, 0.13);
@@ -855,3 +855,8 @@ p, li, .lede, td, .field label, .form-note, .price-note, .approach__row p { font
   body { font-size: 16.5px; }
   .btn { font-size: 0.95rem; }
 }
+
+
+/* v10 — аудит: мелочи UX */
+.form-success .btn { margin-top: 4px; }
+.mini-price .price-note a { color: var(--gold); }

@@ -216,4 +216,39 @@
     });
   });
 
+
+  // Form prefill: CTAs carry data-service / data-doctor. On the same page the
+  // form is filled immediately; across pages the choice travels in the hash
+  // (#zapis?s=...&d=...) so kontakty.html can pick it up.
+  function prefillForm(service, doctor) {
+    var sel = document.querySelector('form[data-booking-form] select[name="service"]');
+    var comment = document.querySelector('form[data-booking-form] textarea[name="comment"]');
+    if (sel && service) {
+      Array.prototype.forEach.call(sel.options, function (o) { if (o.text === service) sel.value = o.text; });
+    }
+    if (comment && doctor && comment.value.indexOf(doctor) === -1) {
+      comment.value = ("К врачу: " + doctor + (comment.value ? "\n" + comment.value : ""));
+    }
+  }
+  document.querySelectorAll("a[data-service], a[data-doctor]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      var s = a.getAttribute("data-service") || "", d = a.getAttribute("data-doctor") || "";
+      var href = a.getAttribute("href") || "";
+      if (href.indexOf("#") === 0) { prefillForm(s, d); return; }
+      var q = [];
+      if (s) q.push("s=" + encodeURIComponent(s));
+      if (d) q.push("d=" + encodeURIComponent(d));
+      if (q.length) a.setAttribute("href", href.split("?")[0] + "?" + q.join("&"));
+    });
+  });
+  (function () {
+    var m = location.hash.match(/^#zapis\?(.*)$/);
+    if (!m) return;
+    var params = {};
+    m[1].split("&").forEach(function (kv) { var p = kv.split("="); params[p[0]] = decodeURIComponent(p[1] || ""); });
+    prefillForm(params.s, params.d);
+    var el = document.getElementById("zapis");
+    if (el) el.scrollIntoView();
+  })();
+
 })();
