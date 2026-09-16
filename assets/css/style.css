@@ -1294,3 +1294,22 @@ a.direction__go:hover { text-decoration: underline; }
   .profile__photo { max-width: 220px; }
   .profile__facts div { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* v17 — страница отзывов, поля даты/времени */
+.opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
+input[type="date"] { font-family: inherit; }
+.reviews-grid--full { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.review-card--full { padding: 28px 28px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; }
+.review-card--full .quote { font-size: 1.05rem; line-height: 1.6; margin: 12px 0 18px; flex: 1; }
+.review-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; }
+.review-src { font-size: 0.8rem; color: var(--ink-soft); text-decoration: none; }
+a.review-src { color: var(--gold); font-weight: 600; }
+a.review-src:hover { text-decoration: underline; }
+.how-reviews { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: start; }
+.how-reviews .steps { margin: 0; }
+.how-reviews__aside { display: grid; gap: 12px; }
+.how-reviews__aside .eyebrow { margin-bottom: 2px; }
+.how-reviews__aside .social { background: #fff; }
+.cta-band h2 em { margin-inline: auto; }
+@media (max-width: 1020px) { .how-reviews { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .reviews-grid--full { grid-template-columns: 1fr; } }

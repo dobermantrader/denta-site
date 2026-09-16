@@ -113,6 +113,15 @@
         "Телефон: " + phoneInput.value.trim(),
         "Направление: " + (service ? service.value : "—"),
       ];
+      var date = form.querySelector('[name="date"]');
+      var time = form.querySelector('[name="time"]');
+      if (date && date.value) {
+        var d = date.value.split("-");
+        lines.push("Удобный день: " + d[2] + "." + d[1] + "." + d[0]);
+      }
+      if (time && time.value && time.value !== "Любое") {
+        lines.push("Удобное время: " + time.value);
+      }
       if (comment && comment.value.trim()) {
         lines.push("Комментарий: " + comment.value.trim());
       }
@@ -252,3 +261,12 @@
   })();
 
 })();
+
+
+// Поле «удобный день»: не раньше сегодня и не дальше 60 дней
+document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(function (inp) {
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+  var fmt = function (d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+  var now = new Date(), max = new Date(now.getTime() + 60 * 86400000);
+  inp.min = fmt(now); inp.max = fmt(max);
+});
