@@ -860,3 +860,21 @@ p, li, .lede, td, .field label, .form-note, .price-note, .approach__row p { font
 /* v10 — аудит: мелочи UX */
 .form-success .btn { margin-top: 4px; }
 .mini-price .price-note a { color: var(--gold); }
+
+
+/* v11 — обзор направлений */
+.directions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.direction {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 30px 26px 26px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  text-decoration: none; color: var(--ink);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+.direction:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--gold-pale); }
+.direction__num { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; letter-spacing: 0.28em; color: var(--gold); font-variant-numeric: lining-nums; }
+.direction h3 { font-size: 1.4rem; margin: 0; }
+.direction p { color: var(--ink-soft); font-size: 0.94rem; margin: 0; flex: 1; }
+.direction__go { font-size: 0.86rem; font-weight: 600; color: var(--gold); margin-top: 6px; }
+@media (max-width: 1020px) { .directions { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { .directions { grid-template-columns: 1fr; } }
