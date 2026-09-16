@@ -1241,3 +1241,56 @@ a.direction__go:hover { text-decoration: underline; }
 .trust-bar a { display: block; border-radius: 12px; transition: background 0.3s var(--ease); }
 .trust-bar a:hover { background: rgba(74, 111, 224, 0.08); }
 .trust-bar a:hover b { color: var(--gold); }
+
+/* v16 — профили врачей */
+.profiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.profiles--single { grid-template-columns: 1fr; max-width: 820px; }
+.profile {
+  display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;
+  padding: 26px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+}
+.section--blush .profile { border-color: transparent; }
+.profile__photo { width: 100%; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: 50% 15%; border-radius: 16px; border: 1px solid var(--line); background: var(--blush-soft); margin: 0; }
+.profile__photo.avatar { display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 2rem; letter-spacing: 0.06em; color: var(--gold); }
+.profile__body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+.profile h3 { margin: 0; font-size: 1.22rem; min-height: 0; }
+.profile .role { margin: -4px 0 0; }
+.profile__facts { margin: 6px 0 0; display: grid; gap: 6px; width: 100%; }
+.profile__facts div { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 0.88rem; line-height: 1.45; }
+.profile__facts dt { color: var(--muted); font-weight: 600; }
+.profile__facts dd { margin: 0; color: var(--ink-deep); }
+.profile__facts a { color: var(--ink-deep); text-decoration: none; font-weight: 600; }
+.profile__does { margin: 4px 0 0; font-size: 0.9rem; color: var(--ink-soft); }
+.profile__does b { color: var(--ink-deep); font-weight: 700; }
+.profile__quote { margin: 4px 0 0; padding: 12px 14px; background: var(--blush-soft); border-radius: 12px; font-size: 0.88rem; font-style: italic; color: var(--ink-deep); }
+.profile__quote p { margin: 0 0 4px; }
+.profile__quote cite { display: block; font-style: normal; font-size: 0.74rem; color: var(--ink-soft); }
+.profile .btn { margin-top: 8px; text-transform: none; font-size: 0.86rem; letter-spacing: 0.01em; font-weight: 600; }
+.profile--director { grid-template-columns: 200px 1fr; }
+
+/* главная: строка стажа в карточке врача, имя-ссылка */
+.doctor__since { margin: 0 0 4px; font-size: 0.86rem; color: var(--ink-soft); }
+.doctor h3 a { color: inherit; text-decoration: none; }
+.doctor h3 a:hover { color: var(--gold); }
+.doctor h3 { min-height: 0; }
+
+/* контакты: соцсети */
+.socials { margin: 6px 0 30px; }
+.socials .eyebrow { margin-bottom: 14px; }
+.socials__row { display: grid; gap: 12px; }
+.social {
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  border: 1px solid var(--line); border-radius: 16px; text-decoration: none; color: var(--ink-deep);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+.social:hover { border-color: var(--gold); background: var(--blush-soft); }
+.social svg { width: 26px; height: 26px; flex: none; color: var(--gold); }
+.social b { display: block; font-size: 0.98rem; }
+.social small { display: block; font-size: 0.8rem; color: var(--ink-soft); }
+
+@media (max-width: 1020px) { .profiles { grid-template-columns: 1fr; } }
+@media (max-width: 720px) {
+  .profile, .profile--director { grid-template-columns: 1fr; }
+  .profile__photo { max-width: 220px; }
+  .profile__facts div { grid-template-columns: 1fr; gap: 2px; }
+}
