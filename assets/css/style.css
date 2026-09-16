@@ -1222,3 +1222,22 @@ a.direction__go:hover { text-decoration: underline; }
 }
 .doctor .avatar { font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 2.4rem; letter-spacing: 0.06em; color: var(--gold); }
 .space-photos img { border-radius: 18px; }
+
+/* v15 — ссылка «в раздел» в каждом блоке */
+.section-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px; font-size: 0.9rem; font-weight: 700; color: var(--gold);
+  text-decoration: none; border-bottom: 1.5px solid transparent; padding-bottom: 2px;
+  transition: border-color 0.3s var(--ease), gap 0.3s var(--ease);
+}
+.section-link:hover { border-bottom-color: var(--gold); gap: 10px; }
+.section-link--light { color: #c9d6f6; margin-top: 6px; font-size: 0.82rem; }
+.section-link--light:hover { border-bottom-color: #c9d6f6; }
+.section-head .section-link { margin-top: 16px; }
+.faq__more .section-link { margin: 0 0 0 6px; font-size: inherit; }
+.cta-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.cta-row .section-link { margin-top: 0; }
+.mini-price .section-link { margin-top: 12px; }
+.trust-bar a { display: block; border-radius: 12px; transition: background 0.3s var(--ease); }
+.trust-bar a:hover { background: rgba(74, 111, 224, 0.08); }
+.trust-bar a:hover b { color: var(--gold); }
