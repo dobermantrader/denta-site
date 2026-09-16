@@ -1051,3 +1051,53 @@ h4, .eyebrow, .hero__tag, .fear-label { font-family: 'Montserrat', sans-serif; }
 .brand__text, label, .avatar, .quote { font-family: 'Montserrat', 'Segoe UI', sans-serif; }
 .avatar { font-family: 'Oswald', sans-serif; font-weight: 500; }
 .quote { font-style: italic; font-size: 1.02rem; line-height: 1.55; }
+
+
+/* v13 — «Острая боль» как оффер: тёмная карточка, шаги, телефон крупно */
+.urgent--offer {
+  background: linear-gradient(135deg, #1e2233 0%, #232a4a 100%);
+  border: 0; color: #fff;
+  padding: 56px 60px;
+  grid-template-columns: 1.25fr 0.75fr; gap: 48px;
+  box-shadow: 0 30px 70px -40px rgba(30, 34, 51, 0.6);
+}
+.urgent--offer .eyebrow { color: #9db4f5; }
+.urgent--offer .eyebrow::before { background: #9db4f5; }
+.urgent--offer h2 { color: #fff; font-size: clamp(2rem, 3.6vw, 3rem); margin-bottom: 0.4em; }
+.urgent--offer h2 em {
+  display: block; font-family: 'Bad Script', 'Segoe Script', cursive;
+  font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0;
+  font-size: 0.62em; line-height: 1.1; color: #9db4f5; margin-top: 0.1em;
+}
+.urgent--offer .urgent__lead { color: rgba(255,255,255,0.82); font-size: 1.02rem; max-width: 560px; margin: 0 0 26px; }
+.urgent__steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+.urgent__steps li {
+  counter-increment: step;
+  padding: 16px 18px 16px 0; border-top: 1px solid rgba(255,255,255,0.18);
+  display: grid; gap: 4px; font-size: 0.86rem; line-height: 1.45; color: rgba(255,255,255,0.78);
+}
+.urgent__steps li::before { content: '0' counter(step); font-family: 'Oswald', sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; color: #9db4f5; }
+.urgent__steps b { color: #fff; font-weight: 700; font-size: 0.98rem; }
+.urgent__cta { display: grid; justify-items: center; text-align: center; gap: 8px; padding: 30px 26px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); border-radius: 22px; }
+.urgent__phone { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: clamp(1.7rem, 2.6vw, 2.3rem); color: #fff; text-decoration: none; letter-spacing: 0.02em; white-space: nowrap; }
+.urgent__hours { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom: 12px; }
+.btn--white { background: #fff; color: var(--ink-deep); }
+.btn--white:hover { background: #e9effc; transform: translateY(-2px); }
+
+/* v13 — «стекло» у карточки отзыва в hero */
+.hero__slide figcaption {
+  background: rgba(255,255,255,0.78);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid rgba(255,255,255,0.7);
+}
+
+@media (max-width: 1020px) {
+  .urgent--offer { grid-template-columns: 1fr; padding: 40px 32px; }
+  .urgent__steps { grid-template-columns: 1fr; gap: 0; }
+  .urgent__steps li { padding: 12px 0; }
+}
+@media (max-width: 720px) {
+  .urgent--offer { padding: 32px 22px; }
+  .urgent__cta { padding: 22px 18px; }
+}
