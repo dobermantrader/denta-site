@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    ДЕНТА — дизайн-система v4 «Светлый Zen»
    Референс: zen.dentist — тёплый почти белый фон, пудровые
    подложки, тёмно-коричневый текст, золото как единственный акцент,
@@ -1434,3 +1434,41 @@ p, li, dd, .lede { text-wrap: pretty; }
 .direction__actions { gap: 8px; }
 .direction__actions .direction__go { white-space: nowrap; font-size: 0.8rem; }
 .direction__actions .btn--sm { padding: 11px 15px; font-size: 0.8rem; }
+
+
+/* ============================================================
+   v19 — второй раунд правок дизайнера
+   ============================================================ */
+
+/* 1. Первый экран: «40 лет» = 1,4×, рукописная строка вплотную к блоку */
+.hero h1 { gap: 0; }
+.hero__title-line { line-height: 1; }
+.hero__title-num { margin-top: 0.06em; }
+.hero__title-num b { font-size: 1.4em; line-height: 0.92; }
+.hero h1 em { line-height: 1; margin-top: -0.02em; }
+
+/* 2. Плашка отзыва: градиент от белого к светло-серому, полупрозрачная обводка */
+.hero__slide figcaption {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(236,238,244,0.9) 100%);
+  border: 1.5px solid rgba(97, 132, 216, 0.35);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* 3. Полоса преимуществ: подпись ближе к заголовку */
+.trust-bar span { margin-top: 3px; }
+.trust-bar b { line-height: 1; }
+
+/* 4. «Острая боль»: воздух между меткой и заголовком — как в остальных блоках */
+.urgent--offer .eyebrow { margin: 0 0 1.5em; }
+
+/* 5–6. Рукописные строки под заголовками: вдвое крупнее, вплотную к заголовку, везде одинаково
+   (кроме первого экрана главной) */
+h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em {
+  font-size: 1.3em; line-height: 0.95; margin-top: -0.02em; text-transform: none;
+}
+.page-hero h1 em { font-size: 0.78em; line-height: 0.95; margin-top: 0; }
+.section-head h2, .family h2 { margin-bottom: 0.3em; }
+@media (max-width: 720px) {
+  h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { font-size: 1.05em; }
+}
