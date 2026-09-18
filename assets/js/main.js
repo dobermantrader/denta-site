@@ -157,7 +157,7 @@
     var slides = Array.prototype.slice.call(root.querySelectorAll(".hero__slide"));
     var dots = root.querySelector(".hero__dots");
     if (!slides.length) return;
-    var QUOTE_MS = 4500, si = 0, qi = 0, timer = null;
+    var QUOTE_MS = 6000, si = 0, qi = 0, timer = null;
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function quotesOf(slide) { return Array.prototype.slice.call(slide.querySelectorAll(".hero__review")); }
@@ -270,3 +270,40 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
   var now = new Date(), max = new Date(now.getTime() + 60 * 86400000);
   inp.min = fmt(now); inp.max = fmt(max);
 });
+
+
+// Рукописная строка под заголовком первого экрана — ровно по ширине блока «Лечим мурманчан / 40 лет»
+(function () {
+  var h1 = document.querySelector(".hero h1"), em = h1 && h1.querySelector("em"), line = h1 && h1.querySelector(".hero__title-line");
+  if (!em || !line) return;
+  function fit() {
+    if (window.innerWidth <= 720) { em.style.fontSize = ""; return; }
+    em.style.fontSize = "";
+    var target = line.getBoundingClientRect().width, w = em.getBoundingClientRect().width;
+    if (!target || !w) return;
+    var cur = parseFloat(getComputedStyle(em).fontSize);
+    em.style.fontSize = (cur * target / w).toFixed(2) + "px";
+  }
+  fit();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  window.addEventListener("resize", fit);
+})();
+
+// Типограф: висящие предлоги, союзы и частицы не остаются в конце строки —
+// пробел после них заменяется неразрывным; то же для «число + слово» и перед тире.
+(function () {
+  var WORDS = "в|во|на|за|к|ко|с|со|у|о|об|от|до|из|по|под|над|при|без|для|про|и|а|но|да|или|не|ни|же|ли|бы|что|как|это|то|мы|вы|он|я|их|её|его";
+  var RE_SHORT = new RegExp("(^|[\\s(«„\"])(" + WORDS + ")[ \\t\\n]+(?=\\S)", "gi");
+  var RE_NUM = /(\d)[ \t\n]+(?=[а-яёА-ЯЁ₽])/g;
+  var RE_DASH = /[ \t\n]+—/g;
+  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };
+  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  var nodes = [], n;
+  while ((n = walker.nextNode())) { if (!SKIP[n.parentNode.nodeName] && /\S/.test(n.nodeValue)) nodes.push(n); }
+  nodes.forEach(function (node) {
+    var t = node.nodeValue, r = t;
+    r = r.replace(RE_SHORT, "$1$2\u00A0").replace(RE_SHORT, "$1$2\u00A0");
+    r = r.replace(RE_NUM, "$1\u00A0").replace(RE_DASH, "\u00A0—");
+    if (r !== t) node.nodeValue = r;
+  });
+})();

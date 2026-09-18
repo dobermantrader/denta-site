@@ -5,27 +5,30 @@
    Cormorant Garamond + гуманистический гротеск, много воздуха.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Bad+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Bad+Script&display=swap');
 
 :root {
   --bg: #ffffff;
-  --blush: #e9effc;
+  --blush: #e8eefb;
   --blush-soft: #f3f6fd;
   --white: #ffffff;
-  --ink: #262b40;
-  --ink-deep: #1e2233;
-  --ink-soft: #4b5169;
-  --muted: #5f667f;
-  --gold: #3457c9;
-  --gold-light: #4a6fe0;
-  --gold-pale: #c9d6f6;
-  --line: rgba(30, 34, 51, 0.12);
-  --line-strong: rgba(30, 34, 51, 0.3);
-  --shadow: 0 30px 70px -40px rgba(30, 34, 51, 0.35);
+  --ink: #2b2d42;
+  --ink-deep: #2b2d42;
+  --ink-soft: #4d5068;
+  --muted: #62657d;
+  --gold: #4363b9;
+  --gold-light: #6184d8;
+  --gold-pale: #ccd8f5;
+  --line: rgba(43, 45, 66, 0.12);
+  --line-strong: rgba(43, 45, 66, 0.3);
+  --shadow: 0 30px 70px -40px rgba(43, 45, 66, 0.35);
   --radius: 18px;
   --radius-lg: 28px;
   --maxw: 1180px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-head: 'DIN Condensed', 'DIN Condensed Bold', 'DINCondensed-Bold', 'Oswald', 'Arial Narrow', sans-serif;
+  --font-script: 'Savoye LET', 'Savoye LET Plain', 'SavoyeLetPlain', 'Bad Script', 'Segoe Script', cursive;
+  --font-body: 'Montserrat', 'Segoe UI', sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -1313,3 +1316,121 @@ a.review-src:hover { text-decoration: underline; }
 .cta-band h2 em { margin-inline: auto; }
 @media (max-width: 1020px) { .how-reviews { grid-template-columns: 1fr; } }
 @media (max-width: 720px) { .reviews-grid--full { grid-template-columns: 1fr; } }
+
+
+/* ============================================================
+   v18 — правки дизайнера: DIN Condensed / Savoye LET / Montserrat,
+   #6184D8 и #2B2D42, рамки фото 50px, ровные карточки услуг
+   ============================================================ */
+
+/* --- Шрифты ---
+   DIN Condensed и Savoye LET — системные шрифты macOS: берутся с компьютера
+   посетителя, если установлены; иначе — Oswald и Bad Script из Google Fonts. */
+body, p, li, td, th, label, input, select, textarea, .lede, .btn, h3, h4,
+.eyebrow, .hero__tag, .fear-label, .hero__quote, .quote, .brand__text,
+.faq summary, .profile h3, .doctor h3, .direction h3, .reason h3 { font-family: var(--font-body); }
+body { font-weight: 400; color: var(--ink); }
+b, strong { font-weight: 600; }
+h1, h2, .trust-bar b, .hero__fact b, .urgent__phone, .avatar, .doctor .avatar, .profile__photo.avatar,
+.reason__num, .direction__num, .approach__num, .facts .num, .family-list .num, .steps li::before {
+  font-family: var(--font-head);
+}
+h1, h2 { font-weight: 700; letter-spacing: 0.015em; line-height: 1; color: var(--ink-deep); }
+h3, .doctor h3, .profile h3, .reason h3, .direction h3, .faq summary { font-weight: 600; color: var(--ink-deep); }
+.btn { font-weight: 600; }
+.main-nav__links a, .header-phone { font-weight: 600; }
+.hero h1 em, .page-hero h1 em, h2 em, .urgent--offer h2 em {
+  font-family: var(--font-script);
+  color: var(--gold-light);
+}
+.urgent--offer h2 em { color: #a9bdf0; }
+.steps li::before, .reason__num, .direction__num { color: var(--gold-light); }
+p, li, dd, .lede { text-wrap: pretty; }
+
+/* --- Цвета: тёмные подложки от #2B2D42 --- */
+.urgent--offer { background: linear-gradient(135deg, #2b2d42 0%, #33375a 100%); }
+.btn--primary:hover { background: #3a3d5c; }
+.btn--gold { background: var(--gold-light); }
+.btn--gold:hover { background: #4f72c6; }
+.site-header .btn--gold:hover { color: var(--gold-light); }
+
+/* --- Первый экран: заголовок --- */
+.hero h1 { display: inline-grid; width: max-content; max-width: 100%; justify-items: stretch; gap: 0.04em; }
+.hero__title-line { white-space: nowrap; }
+.hero__title-num { display: flex; align-items: center; gap: 0.3em; }
+.hero__title-num::before { content: ''; flex: 1; max-width: none; height: 3px; background: var(--ink-deep); }
+.hero__title-num b { font-weight: 700; font-size: 1.2em; line-height: 0.95; white-space: nowrap; }
+.hero h1 em { font-size: 0.78em; text-align: left; margin-top: 0.08em; white-space: nowrap; justify-self: start; }
+
+/* --- Первый экран: рамка фото 50px, фото + отзыв — один элемент --- */
+.hero__slide .hero__photo, .hero__photo { border-radius: 50px; animation: none; }
+.hero__slide {
+  opacity: 0; transform: translateY(10px) scale(0.985);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.hero__slide.is-active { opacity: 1; transform: none; }
+.hero__review { position: static; opacity: 1; transform: none; transition: none; }
+.hero__slide figcaption { border: 1.5px solid var(--gold-light); }
+.hero__tag { color: var(--gold-light); border: 1.5px solid var(--gold-light); background: rgba(255,255,255,0.55); }
+.hero__dots button[aria-selected="true"] { background: var(--gold-light); }
+
+/* --- «Острая боль»: иконки вместо цифр --- */
+.urgent__steps--icons li { counter-increment: none; }
+.urgent__steps--icons li::before { content: none; }
+.urgent__ico { width: 30px; height: 30px; color: #a9bdf0; margin-bottom: 4px; }
+
+/* --- Услуги: одинаковые карточки, элементы на одних линиях --- */
+.directions { align-items: stretch; }
+.direction { display: grid; grid-template-rows: subgrid; grid-row: span 7; row-gap: 8px; padding: 28px 24px 24px; }
+.direction__case { align-self: start; }
+.direction h3 { margin: 0; align-self: start; }
+.direction p { margin: 0; align-self: start; }
+.direction__price { font-family: var(--font-head); font-weight: 700; font-size: 1.7rem; line-height: 1; color: var(--ink-deep); letter-spacing: 0.01em; align-self: end; padding-top: 6px; }
+.direction__price small { display: block; margin-top: 4px; font-family: var(--font-body); font-weight: 400; font-size: 0.78rem; letter-spacing: 0; color: var(--ink-soft); }
+.direction__win { margin: 0; align-self: start; }
+.direction__actions { align-self: end; }
+.directions__note { margin: 22px 0 0; font-size: 0.84rem; color: var(--ink-soft); }
+@supports not (grid-template-rows: subgrid) {
+  .direction { display: flex; flex-direction: column; }
+  .direction__case { min-height: 2.9em; } .direction h3 { min-height: 2.7em; } .direction p { min-height: 4.6em; } .direction__win { min-height: 3.6em; }
+}
+
+/* --- Врачи: одинаковые рамки и кадрирование --- */
+.doctor__photo, .doctor .avatar { aspect-ratio: 4 / 4.4; width: 100%; object-fit: cover; object-position: 60% 22%; border-radius: 28px; }
+.doctor__photo[src*="klimov"] { object-position: 72% 18%; }
+.doctor__photo[src*="plaunov"] { object-position: 78% 20%; }
+.doctor__photo[src*="elpanova"], .profile__photo[src*="elpanova"] { object-position: 50% 12%; }
+.profile__photo { object-position: 60% 22%; }
+.profile__photo[src*="klimov"] { object-position: 72% 18%; }
+.profile__photo[src*="plaunov"] { object-position: 78% 20%; }
+.doctor__since { line-height: 1.45; }
+
+/* --- Отзывы: метки и крупная кнопка --- */
+.fear-label { color: var(--gold-light); border: 1.5px solid var(--gold-light); }
+.reviews-more { display: flex; justify-content: center; margin-top: 52px; }
+.btn--xl {
+  font-size: 1.08rem; letter-spacing: 0.08em; padding: 26px 64px; gap: 0.8em;
+  background: var(--gold-light); color: #fff; border: 0;
+  box-shadow: 0 22px 44px -16px rgba(97, 132, 216, 0.75);
+}
+.btn--xl:hover { background: #4f72c6; transform: translateY(-3px); box-shadow: 0 28px 50px -16px rgba(97, 132, 216, 0.85); }
+.btn--xl span { transition: transform 0.35s var(--ease); }
+.btn--xl:hover span { transform: translateX(6px); }
+
+@media (max-width: 1020px) {
+  .hero h1 { width: auto; display: grid; }
+}
+@media (max-width: 720px) {
+  .hero__slide .hero__photo, .hero__photo { border-radius: 34px; }
+  .hero h1 em { white-space: normal; text-align: left; text-align-last: left; }
+  .btn--xl { width: 100%; padding: 22px 24px; }
+}
+
+/* v18.1 — точки слайдера видны на светлом фото */
+.hero__dots button { background: rgba(255,255,255,0.85); box-shadow: 0 0 0 1px rgba(43,45,66,0.25); }
+.hero__dots button[aria-selected="true"] { background: var(--gold-light); box-shadow: 0 0 0 1px var(--gold-light); }
+
+/* v18.2 — «Подробнее →» в одну строку */
+.direction__actions { gap: 8px; }
+.direction__actions .direction__go { white-space: nowrap; font-size: 0.8rem; }
+.direction__actions .btn--sm { padding: 11px 15px; font-size: 0.8rem; }
