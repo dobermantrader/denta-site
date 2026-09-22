@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    ДЕНТА — дизайн-система v4 «Светлый Zen»
    Референс: zen.dentist — тёплый почти белый фон, пудровые
    подложки, тёмно-коричневый текст, золото как единственный акцент,
@@ -1471,4 +1471,144 @@ h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em {
 .section-head h2, .family h2 { margin-bottom: 0.3em; }
 @media (max-width: 720px) {
   h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { font-size: 1.05em; }
+}
+
+
+/* ============================================================
+   v20 — третий раунд правок дизайнера, мобильная версия, прямая отправка форм
+   ============================================================ */
+
+/* Плашка отзыва: полупрозрачная с размытием, обводка — градиент от белого к серому */
+.hero__slide figcaption {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(rgba(255,255,255,0.45), rgba(255,255,255,0.45)) padding-box,
+    linear-gradient(180deg, #ffffff 0%, #c3c7d3 100%) border-box;
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+}
+
+/* Рукописные строки — вплотную к заголовку (кроме первого экрана) */
+h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: -0.28em; line-height: 0.9; }
+.page-hero h1 em { margin-top: -0.12em; }
+
+/* Иконки в блоке боли — по левому краю текста */
+.urgent__ico { margin-left: -4px; }
+
+/* Цифры оценки — Montserrat */
+.rating__row label { font-family: var(--font-body); font-weight: 600; font-size: 1.05rem; }
+
+/* Список контактов — залитые иконки */
+.contact-list .k { display: inline-flex; align-items: center; gap: 8px; }
+.contact-list .k svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
+
+/* Стрелка «назад / наверх» */
+.to-top {
+  position: fixed; right: 20px; bottom: 20px; z-index: 70;
+  width: 50px; height: 50px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--gold-light); color: #fff;
+  box-shadow: 0 14px 30px -10px rgba(97, 132, 216, 0.7);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), background 0.3s var(--ease);
+}
+.to-top svg { width: 22px; height: 22px; }
+.to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: #4f72c6; }
+.sticky-cta { display: none !important; }
+
+/* Хедер: кнопка-телефон (на десктопе скрыта — там виден номер), одинаковая высота элементов */
+.header-call { display: none; }
+.site-header .btn--sm, .nav-toggle, .header-call { height: 42px; box-sizing: border-box; }
+.site-header .btn--sm { padding: 0 20px; display: inline-flex; align-items: center; }
+.nav-toggle { width: 46px; }
+
+/* ---------- Мобильная версия ---------- */
+@media (max-width: 1020px) {
+  .hero .container { grid-template-columns: 1fr; gap: 28px; }
+  .hero__slides { order: 2; justify-self: stretch; max-width: 100%; }
+  .hero__inner { max-width: 100%; }
+}
+@media (max-width: 720px) {
+  body { padding-bottom: 0; }
+  .container { padding: 0 20px; }
+  .section { padding: 52px 0; }
+  .section-head { margin-bottom: 30px; gap: 14px; }
+  h1 { font-size: 2.4rem; }
+  h2 { font-size: 1.9rem; }
+  h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { font-size: 1.1em; }
+
+  .site-header .container { gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+  .brand__mark { width: 38px; height: 38px; }
+  .brand__text strong { font-size: 1.3rem; }
+  .main-nav { gap: 0; }
+  .header-contacts { gap: 8px; }
+  .header-phone { display: none; }
+  .header-call { display: inline-flex; align-items: center; justify-content: center; width: 42px; border: 1.5px solid rgba(255,255,255,0.85); border-radius: 999px; color: #fff; }
+  .header-call svg { width: 18px; height: 18px; fill: currentColor; }
+  .site-header .btn--sm { padding: 0 14px; font-size: 0.66rem; letter-spacing: 0.06em; }
+  .nav-toggle { width: 42px; }
+
+  .hero .container { padding-top: 34px; padding-bottom: 40px; }
+  .hero h1 { font-size: 9.4vw; width: max-content; max-width: 100%; display: inline-grid; }
+  .hero h1 em { white-space: nowrap; text-align: left; }
+  .hero__inner { padding-top: 0; }
+  .hero__list li { font-size: 0.95rem; }
+  .hero__actions { margin-top: 24px; gap: 10px; }
+  .hero__actions .btn { width: 100%; }
+  .hero__slides { aspect-ratio: 4 / 3.4; margin-bottom: 168px; }
+  .hero__slide .hero__photo, .hero__photo { border-radius: 32px; }
+  .hero__slide figcaption { left: 6%; right: 0; bottom: -156px; padding: 18px 18px 16px; }
+  .hero__quote { font-size: 0.92rem; }
+
+  .trust-bar .container { grid-template-columns: 1fr 1fr; gap: 18px 14px; padding-top: 24px; padding-bottom: 24px; }
+  .trust-bar b { font-size: 1.45rem; }
+
+  .urgent--offer { padding: 28px 20px; gap: 22px; }
+  .urgent__cta { padding: 20px 16px; }
+  .urgent__phone { font-size: 1.6rem; }
+  .direction, .reason { padding: 22px 18px; }
+  .direction__actions .btn--sm { width: auto; }
+  .steps li { grid-template-columns: 34px 1fr; column-gap: 10px; min-width: 0; }
+  .steps li::before { font-size: 1rem; }
+  .steps span, .steps b, .family > p, .lede, .profile__does, .direction p, .reason p { overflow-wrap: anywhere; }
+  .families { gap: 28px; }
+  .mini-price { padding: 24px 18px; }
+  .form-card { padding: 24px 16px; border-radius: 20px; }
+  .form-grid { grid-template-columns: 1fr; gap: 14px; }
+  .feedback-wrap { margin-top: 36px; padding-top: 30px; gap: 22px; }
+  .review-card .quote, .review-card--full .quote { font-size: 0.98rem; }
+  .reviews-grid, .reviews-grid--3 { gap: 22px; }
+  .reviews-more { margin-top: 30px; }
+  .cta-band { padding: 40px 20px; }
+  .booking { gap: 30px; }
+  .contact-list li { padding: 14px 0; gap: 6px; }
+  .contact-list .v, .contact-list li.hours .v, .contact-list li.hours .v span { text-align: left; justify-content: flex-start; }
+  .profile { padding: 18px; gap: 16px; }
+  .profile__photo { max-width: 200px; }
+  .to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; }
+  .site-footer { padding: 44px 0 28px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 26px; }
+}
+@media (max-width: 380px) {
+  .hero h1 { font-size: 8.8vw; }
+  .site-header .btn--sm { padding: 0 11px; font-size: 0.62rem; }
+}
+
+/* v20.1 — двухколоночные сетки складываются на планшете/телефоне */
+@media (max-width: 1020px) {
+  .families, .booking, .space, .feedback-wrap, .how-reviews, .contact-grid, .section-head, .profiles { grid-template-columns: 1fr; }
+  .section-head { gap: 12px; }
+  .space-photos { max-width: 520px; }
+}
+@media (max-width: 720px) {
+  h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: -0.06em; line-height: 1; }
+  .family h2, .cta-band h2 { font-size: 1.75rem; }
+  .steps span { font-size: 0.88rem; }
+  .steps li, .contact-list li, .contact-list .v { min-width: 0; }
+  .contact-list .v { text-align: left; width: 100%; }
+  .contact-list li { flex-direction: column; align-items: flex-start; }
+  .contact-list li.hours .v { justify-items: start; }
+  .families .mini-price, .form-card { max-width: 100%; }
+  .direction__actions { flex-direction: row; justify-content: space-between; }
 }

@@ -73,6 +73,43 @@
   var CLINIC_EMAIL = "oao-denta@yandex.ru";
   var PHONE_RE = /^[+()\d\s-]{7,20}$/;
 
+  // Отправка форм напрямую с сайта (без почтовой программы): POST в FormSubmit,
+  // при недоступности сервиса — запасной вариант через письмо.
+  var FORM_ENDPOINT = "https://formsubmit.co/ajax/" + CLINIC_EMAIL;
+  function sendForm(form, subject, lines, fields, onDone) {
+    var success = form.parentElement.querySelector(".form-success");
+    var btn = form.querySelector('button[type="submit"]');
+    var btnText = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "Отправляем…"; }
+    function showSuccess(viaMail) {
+      if (btn) { btn.disabled = false; btn.textContent = btnText; }
+      form.reset();
+      if (success) {
+        if (viaMail && !success.querySelector(".via-mail")) {
+          var note = document.createElement("p");
+          note.className = "via-mail"; note.style.margin = "0 0 10px";
+          note.textContent = "Сервис отправки сейчас недоступен — мы открыли письмо в вашей почтовой программе, нажмите в ней «Отправить».";
+          success.insertBefore(note, success.firstChild);
+        }
+        success.classList.add("is-visible"); success.setAttribute("tabindex", "-1"); success.focus();
+      }
+      if (onDone) onDone();
+    }
+    var payload = { _subject: subject, _template: "table", _captcha: "false", _honey: "" };
+    fields.forEach(function (f) { payload[f[0]] = f[1]; });
+    var fallback = function () {
+      window.location.href = "mailto:" + CLINIC_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+      showSuccess(true);
+    };
+    if (!window.fetch) { fallback(); return; }
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
+    fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { if (d && (d.success === "true" || d.success === true)) showSuccess(false); else throw new Error("bad"); })
+      .catch(function () { clearTimeout(timer); fallback(); });
+  }
+
   document.querySelectorAll("form[data-booking-form]").forEach(function (form) {
     var nameInput = form.querySelector('[name="name"]');
     var phoneInput = form.querySelector('[name="phone"]');
@@ -135,18 +172,12 @@
         });
       }
 
-      var mailto =
-        "mailto:" + CLINIC_EMAIL +
-        "?subject=" + encodeURIComponent("Заявка на приём — сайт «Дента»") +
-        "&body=" + encodeURIComponent(lines.join("\n"));
-
-      var success = form.parentElement.querySelector(".form-success");
-      if (success) {
-        success.classList.add("is-visible");
-        success.setAttribute("tabindex", "-1");
-        success.focus();
-      }
-      window.location.href = mailto;
+      var fields = [["Имя", nameInput.value.trim()], ["Телефон", phoneInput.value.trim()], ["Направление", service ? service.value : "—"]];
+      if (date && date.value) fields.push(["Удобный день", date.value.split("-").reverse().join(".")]);
+      if (time && time.value) fields.push(["Удобное время", time.value]);
+      if (comment && comment.value.trim()) fields.push(["Комментарий", comment.value.trim()]);
+      if (utm) UTM_PARAMS.forEach(function (key) { if (utm[key]) fields.push([key, utm[key]]); });
+      sendForm(form, "Заявка на приём — сайт «Дента»", lines, fields);
     });
   });
 
@@ -219,9 +250,14 @@
         if (f.type === "checkbox") { lines.push(f.name + ": " + (f.checked ? f.value : "нет")); return; }
         if (f.value.trim()) lines.push(f.name + ": " + f.value.trim());
       });
-      var success = form.parentElement.querySelector(".form-success");
-      if (success) { success.classList.add("is-visible"); success.setAttribute("tabindex", "-1"); success.focus(); }
-      window.location.href = "mailto:" + CLINIC + "?subject=" + encodeURIComponent(form.getAttribute("data-subject") || "Сообщение с сайта") + "&body=" + encodeURIComponent(lines.join("\n"));
+      var fields = [];
+      form.querySelectorAll("input, select, textarea").forEach(function (f) {
+        if (!f.name) return;
+        if (f.type === "radio" && !f.checked) return;
+        if (f.type === "checkbox") { fields.push([f.name, f.checked ? f.value : "нет"]); return; }
+        if (f.value.trim()) fields.push([f.name, f.value.trim()]);
+      });
+      sendForm(form, form.getAttribute("data-subject") || "Сообщение с сайта", lines, fields);
     });
   });
 
@@ -235,8 +271,9 @@
     if (sel && service) {
       Array.prototype.forEach.call(sel.options, function (o) { if (o.text === service) sel.value = o.text; });
     }
-    if (comment && doctor && comment.value.indexOf(doctor) === -1) {
-      comment.value = ("К врачу: " + doctor + (comment.value ? "\n" + comment.value : ""));
+    if (comment && doctor) {
+      var rest = comment.value.replace(/^К врачу: .*$/gm, "").replace(/^\s+|\s+$/g, "");
+      comment.value = "К врачу: " + doctor + (rest ? "\n" + rest : "");
     }
   }
   document.querySelectorAll("a[data-service], a[data-doctor]").forEach(function (a) {
@@ -277,7 +314,6 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
   var h1 = document.querySelector(".hero h1"), em = h1 && h1.querySelector("em"), line = h1 && h1.querySelector(".hero__title-line");
   if (!em || !line) return;
   function fit() {
-    if (window.innerWidth <= 720) { em.style.fontSize = ""; return; }
     em.style.fontSize = "";
     var target = line.getBoundingClientRect().width, w = em.getBoundingClientRect().width;
     if (!target || !w) return;
@@ -306,4 +342,28 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
     r = r.replace(RE_NUM, "$1\u00A0").replace(RE_DASH, "\u00A0—");
     if (r !== t) node.nodeValue = r;
   });
+})();
+
+
+// Стрелка в правом нижнем углу: клик — к началу предыдущего блока,
+// повторный клик в течение 4 секунд — на самый верх страницы.
+(function () {
+  var btn = document.createElement("button");
+  btn.type = "button"; btn.className = "to-top"; btn.setAttribute("aria-label", "К предыдущему блоку; повторно — наверх");
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  document.body.appendChild(btn);
+  var last = 0;
+  function blocks() {
+    return Array.prototype.slice.call(document.querySelectorAll("main > section, main > .trust-bar")).map(function (s) { return s.getBoundingClientRect().top + window.pageYOffset; });
+  }
+  btn.addEventListener("click", function () {
+    var now = Date.now(), y = window.pageYOffset;
+    if (now - last < 4000) { window.scrollTo({ top: 0, behavior: "smooth" }); last = 0; return; }
+    last = now;
+    var prev = 0, header = (document.querySelector(".site-header") || {}).offsetHeight || 0;
+    blocks().forEach(function (t) { if (t - header < y - 24) prev = t - header; });
+    window.scrollTo({ top: Math.max(prev, 0), behavior: "smooth" });
+  });
+  function toggle() { btn.classList.toggle("is-visible", window.pageYOffset > 500); }
+  window.addEventListener("scroll", toggle, { passive: true }); toggle();
 })();
