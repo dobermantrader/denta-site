@@ -1876,3 +1876,8 @@ html.a11y-on.a11y-on[class*="a11y-c-"][class*="a11y-"] body .reception__time * {
 
 /* v23.5 */
 .pros-card .direction__price { align-self: stretch; text-align: left; }
+
+/* v25 — заголовок первого экрана на планшете не растягивается на всю ширину */
+@media (min-width: 721px) and (max-width: 1020px) {
+  .hero h1 { width: max-content; max-width: 100%; display: inline-grid; font-size: clamp(2.4rem, 7.2vw, 3.6rem); }
+}

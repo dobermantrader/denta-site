@@ -52,12 +52,12 @@
   var CLINIC_EMAIL = "oao-denta@yandex.ru";
   var PHONE_RE = /^[+()\d\s-]{7,20}$/;
 
-  // Отправка форм напрямую с сайта (без почтовой программы): POST в FormSubmit,
-  // при недоступности сервиса — запасной вариант через письмо.
-  // Адрес обработчика форм на РОССИЙСКОМ хостинге, например "https://ваш-домен.ru/send.php" (файл — в папке «для_хостинга»).
+  // Отправка форм напрямую с сайта (без почтовой программы) через обработчики на РОССИЙСКОМ хостинге.
+  // API_BASE — папка с обработчиками относительно страницы, после установки пакета на хостинг: "api".
   // Пока пусто: форма открывает письмо в почтовой программе пациента, данные никуда за границу не передаются.
-  var FORM_ENDPOINT = "";
+  var API_BASE = "";
   function sendForm(form, subject, lines, fields, onDone) {
+    var endpoint = API_BASE ? API_BASE.replace(/\/$/, "") + "/" + (form.getAttribute("data-endpoint") || "send.php") : "";
     var success = form.parentElement.querySelector(".form-success");
     var btn = form.querySelector('button[type="submit"]');
     var btnText = btn ? btn.textContent : "";
@@ -69,7 +69,7 @@
         if (viaMail && !success.querySelector(".via-mail")) {
           var note = document.createElement("p");
           note.className = "via-mail"; note.style.margin = "0 0 10px";
-          note.textContent = FORM_ENDPOINT
+          note.textContent = endpoint
             ? "Сервис отправки сейчас недоступен — мы открыли письмо в вашей почтовой программе, нажмите в ней «Отправить»."
             : "Откроется письмо в вашей почтовой программе — нажмите в ней «Отправить». Если почта не настроена, позвоните: +7 (8152) 472-472.";
           var hd = success.querySelector("b"); if (hd) hd.textContent = "Осталось отправить письмо.";
@@ -85,10 +85,10 @@
       window.location.href = "mailto:" + CLINIC_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
       showSuccess(true);
     };
-    if (!window.fetch || !FORM_ENDPOINT) { fallback(); return; }
+    if (!window.fetch || !endpoint) { fallback(); return; }
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
-    fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+    fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
       .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { if (d && (d.success === "true" || d.success === true)) showSuccess(false); else throw new Error("bad"); })
       .catch(function () { clearTimeout(timer); fallback(); });
@@ -165,44 +165,58 @@
     });
   });
 
-  // Hero slideshow, two levels: quotes rotate inside the active doctor slide
-  // (every 4.5 s); after the last quote the next doctor is shown. Autoplay
+  // Hero slideshow, two levels: quotes rotate inside the active slide
+  // (every 6 s); after the last quote the next slide is shown. Autoplay
   // pauses on hover/focus and is disabled under prefers-reduced-motion.
-  document.querySelectorAll("[data-slides]").forEach(function (root) {
-    var slides = Array.prototype.slice.call(root.querySelectorAll(".hero__slide"));
-    var dots = root.querySelector(".hero__dots");
-    if (!slides.length) return;
-    var QUOTE_MS = 6000, si = 0, qi = 0, timer = null;
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Функция перезапускается после того, как content.js перерисует слайды из data/reviews.json.
+  function initSlides() {
+    document.querySelectorAll("[data-slides]").forEach(function (root) {
+      if (root.__stop) root.__stop();
+      var slides = Array.prototype.slice.call(root.querySelectorAll(".hero__slide"));
+      var dots = root.querySelector(".hero__dots");
+      if (!slides.length) return;
+      if (dots) dots.innerHTML = "";
+      var QUOTE_MS = 6000, si = 0, qi = 0, timer = null;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    function quotesOf(slide) { return Array.prototype.slice.call(slide.querySelectorAll(".hero__review")); }
-    function paint() {
-      slides.forEach(function (s, k) {
-        var on = k === si;
-        s.classList.toggle("is-active", on);
-        quotesOf(s).forEach(function (q, j) { q.classList.toggle("is-active", on && j === qi); });
+      function quotesOf(slide) { return Array.prototype.slice.call(slide.querySelectorAll(".hero__review")); }
+      function paint() {
+        slides.forEach(function (s, k) {
+          var on = k === si;
+          s.classList.toggle("is-active", on);
+          quotesOf(s).forEach(function (q, j) { q.classList.toggle("is-active", on && j === qi); });
+        });
+        if (dots) Array.prototype.forEach.call(dots.children, function (d, k) { d.setAttribute("aria-selected", k === si ? "true" : "false"); });
+      }
+      function step() {
+        var n = quotesOf(slides[si]).length;
+        if (qi + 1 < n) { qi += 1; } else { qi = 0; si = (si + 1) % slides.length; }
+        paint();
+      }
+      function goSlide(k) { si = k; qi = 0; paint(); restart(); }
+      if (dots) slides.forEach(function (_, k) {
+        var b = document.createElement("button");
+        b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-label", "Слайд " + (k + 1));
+        b.addEventListener("click", function () { goSlide(k); });
+        dots.appendChild(b);
       });
-      if (dots) Array.prototype.forEach.call(dots.children, function (d, k) { d.setAttribute("aria-selected", k === si ? "true" : "false"); });
-    }
-    function step() {
-      var n = quotesOf(slides[si]).length;
-      if (qi + 1 < n) { qi += 1; } else { qi = 0; si = (si + 1) % slides.length; }
-      paint();
-    }
-    function goSlide(k) { si = k; qi = 0; paint(); restart(); }
-    if (dots) slides.forEach(function (_, k) {
-      var b = document.createElement("button");
-      b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-label", "Врач " + (k + 1));
-      b.addEventListener("click", function () { goSlide(k); });
-      dots.appendChild(b);
+      function start() { if (!reduce && !timer) timer = setInterval(step, QUOTE_MS); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      function restart() { stop(); start(); }
+      root.__start = start; root.__stop = stop;
+      if (!root.__bound) {
+        root.addEventListener("mouseenter", function () { if (root.__stop) root.__stop(); });
+        root.addEventListener("mouseleave", function () { if (root.__start) root.__start(); });
+        root.addEventListener("focusin", function () { if (root.__stop) root.__stop(); });
+        root.addEventListener("focusout", function () { if (root.__start) root.__start(); });
+        root.__bound = true;
+      }
+      paint(); start();
     });
-    function start() { if (!reduce && !timer) timer = setInterval(step, QUOTE_MS); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    function restart() { stop(); start(); }
-    root.addEventListener("mouseenter", stop); root.addEventListener("mouseleave", start);
-    root.addEventListener("focusin", stop); root.addEventListener("focusout", start);
-    paint(); start();
-  });
+  }
+  window.__dentaInit = window.__dentaInit || {};
+  window.__dentaInit.slider = initSlides;
+  initSlides();
 
 
   // Generic mail forms (e.g. patient reviews): validates required fields,
@@ -260,16 +274,16 @@
       comment.value = "К врачу: " + doctor + (rest ? "\n" + rest : "");
     }
   }
-  document.querySelectorAll("a[data-service], a[data-doctor]").forEach(function (a) {
-    a.addEventListener("click", function () {
-      var s = a.getAttribute("data-service") || "", d = a.getAttribute("data-doctor") || "";
-      var href = a.getAttribute("href") || "";
-      if (href.indexOf("#") === 0) { prefillForm(s, d); return; }
-      var q = [];
-      if (s) q.push("s=" + encodeURIComponent(s));
-      if (d) q.push("d=" + encodeURIComponent(d));
-      if (q.length) a.setAttribute("href", href.split("?")[0] + "?" + q.join("&"));
-    });
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a[data-service], a[data-doctor]") : null;
+    if (!a) return;
+    var s = a.getAttribute("data-service") || "", d = a.getAttribute("data-doctor") || "";
+    var href = a.getAttribute("href") || "";
+    if (href.indexOf("#") === 0) { prefillForm(s, d); return; }
+    var q = [];
+    if (s) q.push("s=" + encodeURIComponent(s));
+    if (d) q.push("d=" + encodeURIComponent(d));
+    if (q.length) a.setAttribute("href", href.split("?")[0] + "?" + q.join("&"));
   });
   (function () {
     var m = location.hash.match(/^#zapis\?(.*)$/);
@@ -316,16 +330,20 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
   var RE_SHORT = new RegExp("(^|[\\s(«„\"])(" + WORDS + ")[ \\t\\n]+(?=\\S)", "gi");
   var RE_NUM = /(\d)[ \t\n]+(?=[а-яёА-ЯЁ₽])/g;
   var RE_DASH = /[ \t\n]+—/g;
-  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };
-  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-  var nodes = [], n;
-  while ((n = walker.nextNode())) { if (!SKIP[n.parentNode.nodeName] && /\S/.test(n.nodeValue)) nodes.push(n); }
-  nodes.forEach(function (node) {
-    var t = node.nodeValue, r = t;
-    r = r.replace(RE_SHORT, "$1$2\u00A0").replace(RE_SHORT, "$1$2\u00A0");
-    r = r.replace(RE_NUM, "$1\u00A0").replace(RE_DASH, "\u00A0—");
-    if (r !== t) node.nodeValue = r;
-  });
+  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1, OPTION: 1 };
+  function typo(root) {
+    var walker = document.createTreeWalker(root || document.body, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while ((n = walker.nextNode())) { if (!SKIP[n.parentNode.nodeName] && /\S/.test(n.nodeValue)) nodes.push(n); }
+    nodes.forEach(function (node) {
+      var t = node.nodeValue, r = t;
+      r = r.replace(RE_SHORT, "$1$2\u00A0").replace(RE_SHORT, "$1$2\u00A0");
+      r = r.replace(RE_NUM, "$1\u00A0").replace(RE_DASH, "\u00A0—");
+      if (r !== t) node.nodeValue = r;
+    });
+  }
+  window.__dentaTypo = typo;
+  typo(document.body);
 })();
 
 
@@ -355,26 +373,35 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
 
 // Фильтр отзывов по врачам (страница «Отзывы»): ?doctor=pitaleva или кнопки-чипы
 (function () {
-  var bar = document.querySelector("[data-review-filter]");
-  if (!bar) return;
-  var cards = [].slice.call(document.querySelectorAll(".review-card--full[data-doctor]"));
-  var empty = document.querySelector("[data-review-empty]");
-  function apply(key) {
-    var shown = 0;
-    cards.forEach(function (c) { var ok = key === "all" || c.getAttribute("data-doctor") === key; c.hidden = !ok; if (ok) shown++; });
-    [].forEach.call(bar.querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-key") === key ? "true" : "false"); });
-    if (empty) {
-      empty.hidden = shown !== 0;
-      if (!shown) {
-        var btn = bar.querySelector('button[data-key="' + key + '"]');
-        var nm = empty.querySelector("[data-name]"); if (nm && btn) nm.textContent = btn.getAttribute("data-name");
-        var a = empty.querySelector("a"); if (a && btn) a.setAttribute("href", "#otzyv?d=" + encodeURIComponent(btn.getAttribute("data-name")));
+  function initFilter() {
+    var bar = document.querySelector("[data-review-filter]");
+    if (!bar) return;
+    var empty = document.querySelector("[data-review-empty]");
+    function apply(key) {
+      var shown = 0;
+      [].forEach.call(document.querySelectorAll(".review-card--full[data-doctor]"), function (c) {
+        var ok = key === "all" || c.getAttribute("data-doctor") === key; c.hidden = !ok; if (ok) shown++;
+      });
+      [].forEach.call(bar.querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-key") === key ? "true" : "false"); });
+      if (empty) {
+        empty.hidden = shown !== 0;
+        if (!shown) {
+          var btn = bar.querySelector('button[data-key="' + key + '"]');
+          var nm = empty.querySelector("[data-name]"); if (nm && btn) nm.textContent = btn.getAttribute("data-name");
+          var a = empty.querySelector("a"); if (a && btn) a.setAttribute("href", "#otzyv?d=" + encodeURIComponent(btn.getAttribute("data-name")));
+        }
       }
     }
+    if (!bar.__bound) {
+      bar.addEventListener("click", function (e) { var b = e.target.closest ? e.target.closest("button") : null; if (b) apply(b.getAttribute("data-key")); });
+      bar.__bound = true;
+    }
+    var m = location.search.match(/[?&]doctor=([\w-]+)/);
+    apply(m ? m[1] : "all");
   }
-  bar.addEventListener("click", function (e) { var b = e.target.closest ? e.target.closest("button") : null; if (b) apply(b.getAttribute("data-key")); });
-  var m = location.search.match(/[?&]doctor=([\w-]+)/);
-  apply(m ? m[1] : "all");
+  window.__dentaInit = window.__dentaInit || {};
+  window.__dentaInit.filter = initFilter;
+  initFilter();
 })();
 
 // Предзаполнение врача в форме отзыва: otzyvy.html#otzyv?d=ФИО
@@ -387,6 +414,8 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
     [].forEach.call(sel.options, function (o) { if (o.text.indexOf(name) === 0) sel.value = o.text; });
     var box = document.getElementById("otzyv"); if (box) box.scrollIntoView();
   }
+  window.__dentaInit = window.__dentaInit || {};
+  window.__dentaInit.prefill = run;
   run(); window.addEventListener("hashchange", run);
 })();
 

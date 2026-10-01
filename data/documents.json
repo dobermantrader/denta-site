@@ -1,0 +1,64 @@
+{
+  "docs": [
+    {
+      "id": "d-license",
+      "key": "license",
+      "title": "Выписка из реестра лицензий",
+      "file": "assets/docs/vypiska-iz-reestra-licenzij-2024-08-28.pdf",
+      "date": "2024-08-28",
+      "note": "",
+      "order": 1,
+      "size": 758991
+    },
+    {
+      "id": "d-price",
+      "key": "price",
+      "title": "Прейскурант платных услуг",
+      "file": "assets/source/preyskurant_2026-09-01.pdf",
+      "date": "2026-09-01",
+      "note": "",
+      "order": 2,
+      "size": 5244065
+    },
+    {
+      "id": "d-policy",
+      "key": "policy",
+      "title": "Политика конфиденциальности",
+      "file": "assets/docs/politika-konfidencialnosti.pdf",
+      "date": "2026-10-01",
+      "note": "обработка персональных данных",
+      "order": 3,
+      "size": 98382
+    },
+    {
+      "id": "d-ogrn",
+      "key": "",
+      "title": "Свидетельство о государственной регистрации",
+      "file": "assets/docs/svidetelstvo-o-gosregistracii.pdf",
+      "date": "2005-08-26",
+      "note": "",
+      "order": 4,
+      "size": 1284637
+    },
+    {
+      "id": "d-nalog1",
+      "key": "",
+      "title": "Свидетельство о постановке на учёт в налоговом органе",
+      "file": "assets/docs/svidetelstvo-o-postanovke-na-uchet-1.pdf",
+      "date": "2005-08-26",
+      "note": "",
+      "order": 5,
+      "size": 1162468
+    },
+    {
+      "id": "d-nalog2",
+      "key": "",
+      "title": "Свидетельство о постановке на учёт российской организации",
+      "file": "assets/docs/svidetelstvo-o-postanovke-na-uchet-2.pdf",
+      "date": "2005-08-26",
+      "note": "",
+      "order": 6,
+      "size": 350588
+    }
+  ]
+}
