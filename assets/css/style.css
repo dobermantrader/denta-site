@@ -5,8 +5,6 @@
    Cormorant Garamond + гуманистический гротеск, много воздуха.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Bad+Script&display=swap');
-
 :root {
   --bg: #ffffff;
   --blush: #e8eefb;
@@ -1640,3 +1638,32 @@ h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: -0.05e
 @media (max-width: 720px) {
   h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: 0; }
 }
+
+
+/* ============================================================
+   v22 — предупреждение о противопоказаниях, фильтр отзывов по врачам
+   ============================================================ */
+[hidden] { display: none !important; }
+
+.legal-strip { background: var(--blush-soft); border-bottom: 1px solid var(--line); padding: 14px 0; }
+.legal-strip p { margin: 0; font-size: 0.95rem; color: var(--ink-deep); text-align: center; }
+.legal-warning { margin: 18px 0 0; padding: 12px 16px; font-size: 0.92rem; color: var(--ink-deep); background: var(--blush-soft); border-radius: 12px; border: 1px solid var(--gold-pale); }
+.container > .legal-warning { margin: 18px 0 0; }
+
+.review-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.chip {
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; color: var(--ink-deep);
+  background: #fff; border: 1.5px solid var(--line-strong); border-radius: 999px; padding: 8px 14px; cursor: pointer;
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.chip span { color: var(--ink-soft); font-weight: 500; margin-left: 4px; }
+.chip:hover { border-color: var(--gold-light); }
+.chip[aria-pressed="true"] { background: var(--gold-light); border-color: var(--gold-light); color: #fff; }
+.chip[aria-pressed="true"] span { color: #fff; }
+.chip.is-empty { color: var(--muted); border-style: dashed; }
+.review-empty { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding: 22px 24px; margin-bottom: 20px; background: var(--blush-soft); border: 1px solid var(--gold-pale); border-radius: var(--radius); }
+.review-empty p { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+.profile__review-link { font-size: 0.86rem; font-weight: 600; color: var(--gold); text-decoration: none; }
+.profile__review-link:hover { text-decoration: underline; }
+.author a { color: var(--gold); text-decoration: none; font-weight: 600; }
+.author a:hover { text-decoration: underline; }

@@ -16,9 +16,10 @@
 <meta property="og:url" content="https://dobermantrader.github.io/denta-site/otzyvy.html">
 <meta property="og:image" content="https://dobermantrader.github.io/denta-site/assets/img/doctors/pitaleva.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=31">
+<link rel="preload" href="assets/fonts/Montserrat-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Oswald-cyrillic-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css?v=32">
+<link rel="stylesheet" href="assets/css/style.css?v=32">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dentist","name":"Стоматология «Дента»","legalName":"АО «Дента»","url":"https://dobermantrader.github.io/denta-site/","image":"https://dobermantrader.github.io/denta-site/assets/img/doctors/pitaleva.jpg","telephone":"+7-8152-47-24-72","email":"oao-denta@yandex.ru","foundingDate":"1986","address":{"@type":"PostalAddress","streetAddress":"ул. Коммуны, 20","addressLocality":"Мурманск","postalCode":"183038","addressCountry":"RU"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"19:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"15:00"}],"sameAs":["https://vk.com/denta51"],"priceRange":"₽₽"}
 </script>
@@ -77,23 +78,37 @@
         </div>
         <div><p class="lede">Что пишут люди, которые уже лечились в «Денте»: о врачах, об отношении и о результате.</p><a class="section-link" href="vrachi.html">К кому они ходили <span aria-hidden="true">→</span></a></div>
       </div>
+      <div class="review-filter" data-review-filter role="group" aria-label="Показать отзывы о враче">
+        <button type="button" class="chip" data-key="all" data-name="" aria-pressed="false">Все отзывы <span>4</span></button>
+        <button type="button" class="chip" data-key="clinic" data-name="Клиника в целом" aria-pressed="false">О клинике <span>2</span></button>
+        <button type="button" class="chip" data-key="pitaleva" data-name="Питалева Елена Львовна" aria-pressed="false">Питалева Е. Л. <span>2</span></button>
+        <button type="button" class="chip is-empty" data-key="klimov" data-name="Климов Александр Дмитриевич" aria-pressed="false">Климов А. Д. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="plaunov" data-name="Плаунов Михаил Григорьевич" aria-pressed="false">Плаунов М. Г. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="nikitin" data-name="Никитин Эдуард Витальевич" aria-pressed="false">Никитин Э. В. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="misyachenko" data-name="Мисяченко Галина Борисовна" aria-pressed="false">Мисяченко Г. Б. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="lavrenova" data-name="Лавренова Ольга Ивановна" aria-pressed="false">Лавренова О. И. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="semenova" data-name="Семенова Елена Борисовна" aria-pressed="false">Семенова Е. Б. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="polovinko" data-name="Половинко Елена Владимировна" aria-pressed="false">Половинко Е. В. <span>0</span></button>
+        <button type="button" class="chip is-empty" data-key="elpanova" data-name="Елпанова Татьяна Анатольевна" aria-pressed="false">Елпанова Т. А. <span>0</span></button>
+      </div>
+      <div class="review-empty" data-review-empty hidden><p>Отзывов о враче <b data-name></b> пока нет. Лечились у него? Расскажите о приёме — это поможет следующему пациенту.</p><a class="btn btn--primary btn--sm" href="#otzyv">Оставить отзыв</a></div>
       <div class="reviews-grid reviews-grid--full">
-        <article class="review-card review-card--full">
+        <article class="review-card review-card--full" data-doctor="clinic">
           <span class="fear-label">Отзыв о клинике</span>
           <p class="quote">«Великолепный специалист, очень довольна. Знает свою работу и относится действительно по-человечески — редкость среди врачей».</p>
           <div class="review-meta"><p class="author">Ильинова Женечка</p><span class="review-src">о клинике · с сайта клиники</span></div>
         </article>
-        <article class="review-card review-card--full">
+        <article class="review-card review-card--full" data-doctor="pitaleva">
           <span class="fear-label">Отзыв о враче</span>
           <p class="quote">«Превосходный врач, всем советую! Съёмные протезы — как свои! Ценник соответствует качеству, работает с превосходными техниками. Где только не протезировался, но здесь мне понравилось больше всего. Елена Львовна, вы лучшая!»</p>
           <div class="review-meta"><p class="author">Бартошин Павел</p><a class="review-src" href="vrachi.html#pitaleva">о враче: Питалева Е. Л. →</a></div>
         </article>
-        <article class="review-card review-card--full">
+        <article class="review-card review-card--full" data-doctor="pitaleva">
           <span class="fear-label">Отзыв о враче</span>
           <p class="quote">«Мне здесь понравилось абсолютно всё! Чистота, уют и доброжелательное отношение ко всем клиентам. Коллектив просто чудесный. Елена Львовна Питалёва — просто кудесница в своём деле. Рекомендую, не пожалеете».</p>
           <div class="review-meta"><p class="author">Лариса Раскошная</p><a class="review-src" href="vrachi.html#pitaleva">о враче: Питалева Е. Л. →</a></div>
         </article>
-        <article class="review-card review-card--full">
+        <article class="review-card review-card--full" data-doctor="clinic">
           <span class="fear-label">Отзыв о клинике</span>
           <p class="quote">«Очень внимательный персонал. Ответственно относятся к пациентам, добросовестно выполняют свою работу. Молодцы».</p>
           <div class="review-meta"><p class="author">Трубачёва Ирина</p><span class="review-src">о клинике · с сайта клиники</span></div>
@@ -178,7 +193,7 @@
             <label class="check field--full"><input type="checkbox" id="fbConsent" name="Публикация" value="разрешаю публикацию на сайте" checked> Разрешаю опубликовать отзыв на сайте с моим именем</label>
           </div>
           <button class="btn btn--primary btn--block" type="submit" style="margin-top:20px;">Отправить отзыв</button>
-          <p class="form-note">Отправляя отзыв, вы соглашаетесь с <a href="assets/docs/politika-konfidencialnosti.pdf" target="_blank" rel="noopener">политикой конфиденциальности</a>. Отзыв уходит нам прямо с сайта — мы читаем каждый.</p>
+          <p class="form-note">Отправляя отзыв, вы соглашаетесь с <a href="assets/docs/politika-konfidencialnosti.pdf" target="_blank" rel="noopener">политикой конфиденциальности</a>. Мы читаем каждый отзыв.</p>
         </form>
         <div class="form-success" role="status"><p style="margin:0 0 12px;"><b>Спасибо!</b> Отзыв получен и появится на сайте после проверки администратором.</p><p style="margin:0;">Если удобнее — напишите нам <a href="https://vk.me/denta51" target="_blank" rel="noopener">ВКонтакте</a>.</p></div>
       </div>
@@ -204,6 +219,7 @@
 
 
 <footer class="site-footer">
+  <div class="legal-strip"><div class="container"><p><b>Имеются противопоказания.</b> Необходимо получить консультацию специалиста.</p></div></div>
   <div class="container">
     <div class="footer-grid">
       <div>
@@ -251,6 +267,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=31"></script>
+<script src="assets/js/main.js?v=32"></script>
 </body>
 </html>

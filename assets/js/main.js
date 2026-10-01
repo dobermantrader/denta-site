@@ -75,7 +75,9 @@
 
   // Отправка форм напрямую с сайта (без почтовой программы): POST в FormSubmit,
   // при недоступности сервиса — запасной вариант через письмо.
-  var FORM_ENDPOINT = "https://formsubmit.co/ajax/" + CLINIC_EMAIL;
+  // Адрес обработчика форм на РОССИЙСКОМ хостинге, например "https://ваш-домен.ru/send.php" (файл — в папке «для_хостинга»).
+  // Пока пусто: форма открывает письмо в почтовой программе пациента, данные никуда за границу не передаются.
+  var FORM_ENDPOINT = "";
   function sendForm(form, subject, lines, fields, onDone) {
     var success = form.parentElement.querySelector(".form-success");
     var btn = form.querySelector('button[type="submit"]');
@@ -88,20 +90,23 @@
         if (viaMail && !success.querySelector(".via-mail")) {
           var note = document.createElement("p");
           note.className = "via-mail"; note.style.margin = "0 0 10px";
-          note.textContent = "Сервис отправки сейчас недоступен — мы открыли письмо в вашей почтовой программе, нажмите в ней «Отправить».";
+          note.textContent = FORM_ENDPOINT
+            ? "Сервис отправки сейчас недоступен — мы открыли письмо в вашей почтовой программе, нажмите в ней «Отправить»."
+            : "Откроется письмо в вашей почтовой программе — нажмите в ней «Отправить». Если почта не настроена, позвоните: +7 (8152) 472-472.";
+          var hd = success.querySelector("b"); if (hd) hd.textContent = "Осталось отправить письмо.";
           success.insertBefore(note, success.firstChild);
         }
         success.classList.add("is-visible"); success.setAttribute("tabindex", "-1"); success.focus();
       }
       if (onDone) onDone();
     }
-    var payload = { _subject: subject, _template: "table", _captcha: "false", _honey: "" };
+    var payload = { subject: subject, page: location.pathname, _honey: "" };
     fields.forEach(function (f) { payload[f[0]] = f[1]; });
     var fallback = function () {
       window.location.href = "mailto:" + CLINIC_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
       showSuccess(true);
     };
-    if (!window.fetch) { fallback(); return; }
+    if (!window.fetch || !FORM_ENDPOINT) { fallback(); return; }
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
     fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
@@ -366,4 +371,42 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
   });
   function toggle() { btn.classList.toggle("is-visible", window.pageYOffset > 500); }
   window.addEventListener("scroll", toggle, { passive: true }); toggle();
+})();
+
+
+// Фильтр отзывов по врачам (страница «Отзывы»): ?doctor=pitaleva или кнопки-чипы
+(function () {
+  var bar = document.querySelector("[data-review-filter]");
+  if (!bar) return;
+  var cards = [].slice.call(document.querySelectorAll(".review-card--full[data-doctor]"));
+  var empty = document.querySelector("[data-review-empty]");
+  function apply(key) {
+    var shown = 0;
+    cards.forEach(function (c) { var ok = key === "all" || c.getAttribute("data-doctor") === key; c.hidden = !ok; if (ok) shown++; });
+    [].forEach.call(bar.querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-key") === key ? "true" : "false"); });
+    if (empty) {
+      empty.hidden = shown !== 0;
+      if (!shown) {
+        var btn = bar.querySelector('button[data-key="' + key + '"]');
+        var nm = empty.querySelector("[data-name]"); if (nm && btn) nm.textContent = btn.getAttribute("data-name");
+        var a = empty.querySelector("a"); if (a && btn) a.setAttribute("href", "#otzyv?d=" + encodeURIComponent(btn.getAttribute("data-name")));
+      }
+    }
+  }
+  bar.addEventListener("click", function (e) { var b = e.target.closest ? e.target.closest("button") : null; if (b) apply(b.getAttribute("data-key")); });
+  var m = location.search.match(/[?&]doctor=([\w-]+)/);
+  apply(m ? m[1] : "all");
+})();
+
+// Предзаполнение врача в форме отзыва: otzyvy.html#otzyv?d=ФИО
+(function () {
+  function run() {
+    var m = location.hash.match(/^#otzyv\?d=(.*)$/);
+    var sel = document.getElementById("fbDoctor");
+    if (!m || !sel) return;
+    var name = decodeURIComponent(m[1]);
+    [].forEach.call(sel.options, function (o) { if (o.text.indexOf(name) === 0) sel.value = o.text; });
+    var box = document.getElementById("otzyv"); if (box) box.scrollIntoView();
+  }
+  run(); window.addEventListener("hashchange", run);
 })();
