@@ -17,27 +17,6 @@
     });
   }
 
-  // "Версия для слабовидящих" — persisted per browser
-  var A11Y_KEY = "denta-a11y-mode";
-  var a11yButtons = document.querySelectorAll("[data-a11y-toggle]");
-  function applyA11y(on) {
-    document.documentElement.classList.toggle("a11y-mode", on);
-    a11yButtons.forEach(function (btn) {
-      btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.textContent = on ? "Обычная версия" : "Версия для слабовидящих";
-    });
-  }
-  try {
-    applyA11y(localStorage.getItem(A11Y_KEY) === "1");
-  } catch (e) { /* localStorage unavailable */ }
-  a11yButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var on = !document.documentElement.classList.contains("a11y-mode");
-      applyA11y(on);
-      try { localStorage.setItem(A11Y_KEY, on ? "1" : "0"); } catch (e) {}
-    });
-  });
-
   // UTM capture: remembers how the visitor arrived (ad campaign, source)
   // for the length of the browser session, so the booking email below
   // still carries it even if the person lands on one page (e.g. from an
@@ -409,4 +388,75 @@ document.querySelectorAll('input[type="date"][data-date-min="today"]').forEach(f
     var box = document.getElementById("otzyv"); if (box) box.scrollIntoView();
   }
   run(); window.addEventListener("hashchange", run);
+})();
+
+
+// Версия для слабовидящих: размер шрифта, цветовая схема (ГОСТ Р 52872-2012), интервал, изображения.
+// Включается кнопкой-глазом в шапке или в подвале; настройки сохраняются в браузере.
+(function () {
+  var KEY = "denta-a11y-v2", root = document.documentElement;
+  var st = { on: false, size: 1, color: "bw", space: 0, img: true };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved) { for (var k in saved) st[k] = saved[k]; } } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  var EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var header = document.querySelector(".site-header");
+  var panel = document.createElement("section");
+  panel.className = "a11y-panel"; panel.setAttribute("aria-label", "Настройки версии для слабовидящих"); panel.hidden = true;
+  function group(title, name, items) {
+    return '<div class="a11y-group" role="group" aria-label="' + title + '"><span class="a11y-group__t">' + title + '</span><div class="a11y-group__b">' +
+      items.map(function (it) { return '<button type="button" data-a11y-set="' + name + '" data-v="' + it[0] + '" class="' + (it[2] || "") + '" aria-pressed="false">' + it[1] + '</button>'; }).join("") + '</div></div>';
+  }
+  panel.innerHTML = '<div class="container a11y-panel__in">' +
+    group("Размер шрифта", "size", [["1", "А", "s1"], ["2", "А+", "s2"], ["3", "А++", "s3"]]) +
+    group("Цвета", "color", [["bw", "Чёрное на белом", "c-bw"], ["wb", "Белое на чёрном", "c-wb"], ["bl", "Синее на голубом", "c-bl"], ["br", "Коричневое на бежевом", "c-br"]]) +
+    group("Интервал между буквами", "space", [["0", "Обычный"], ["1", "Средний"], ["2", "Большой"]]) +
+    group("Изображения", "img", [["1", "Показывать"], ["0", "Скрыть"]]) +
+    '<button type="button" class="a11y-reset" data-a11y-toggle>Обычная версия сайта</button></div>';
+  if (header && header.parentNode) header.parentNode.insertBefore(panel, header.nextSibling);
+
+  // кнопка-глаз в шапке и пункт в мобильном меню
+  var contacts = document.querySelector(".header-contacts"), toggleBtn = document.querySelector(".nav-toggle");
+  if (contacts) {
+    var eye = document.createElement("button");
+    eye.type = "button"; eye.className = "a11y-eye"; eye.setAttribute("data-a11y-toggle", ""); eye.setAttribute("aria-pressed", "false");
+    eye.setAttribute("aria-label", "Версия для слабовидящих"); eye.title = "Версия для слабовидящих"; eye.innerHTML = EYE;
+    contacts.insertBefore(eye, toggleBtn || null);
+  }
+  var navList = document.querySelector(".main-nav__links");
+  if (navList) {
+    var li = document.createElement("li"); li.className = "main-nav__a11y";
+    li.innerHTML = '<button type="button" data-a11y-toggle>Версия для слабовидящих</button>'; navList.appendChild(li);
+  }
+
+  function apply() {
+    var cls = root.className.split(/\s+/).filter(function (c) { return c && c.indexOf("a11y-") !== 0; });
+    if (st.on) {
+      cls.push("a11y-on", "a11y-s" + st.size);
+      if (st.color) cls.push("a11y-c-" + st.color);
+      if (+st.space) cls.push("a11y-k" + st.space);
+      if (!st.img) cls.push("a11y-noimg");
+    }
+    root.className = cls.join(" ");
+    panel.hidden = !st.on;
+    [].forEach.call(document.querySelectorAll("[data-a11y-toggle]"), function (b) {
+      b.setAttribute("aria-pressed", st.on ? "true" : "false");
+      if (b.classList.contains("a11y-link")) b.textContent = st.on ? "Обычная версия" : "Версия для слабовидящих";
+    });
+    [].forEach.call(panel.querySelectorAll("[data-a11y-set]"), function (b) {
+      var name = b.getAttribute("data-a11y-set"), v = b.getAttribute("data-v"), cur = name === "img" ? (st.img ? "1" : "0") : String(st[name]);
+      b.setAttribute("aria-pressed", v === cur ? "true" : "false");
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-a11y-toggle], [data-a11y-set]") : null;
+    if (!t) return;
+    if (t.hasAttribute("data-a11y-toggle")) { st.on = !st.on; if (st.on && !st.color) st.color = "bw"; }
+    else {
+      var name = t.getAttribute("data-a11y-set"), v = t.getAttribute("data-v");
+      if (name === "img") st.img = v === "1"; else if (name === "color") st.color = v; else st[name] = parseInt(v, 10);
+    }
+    save(); apply();
+  });
+  apply();
 })();

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dobermantrader.github.io/denta-site/sitemap.xml
