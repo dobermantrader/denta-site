@@ -1881,3 +1881,21 @@ html.a11y-on.a11y-on[class*="a11y-c-"][class*="a11y-"] body .reception__time * {
 @media (min-width: 721px) and (max-width: 1020px) {
   .hero h1 { width: max-content; max-width: 100%; display: inline-grid; font-size: clamp(2.4rem, 7.2vw, 3.6rem); }
 }
+
+/* v26 — рукописная строка под заголовком: небольшой зазор, без наложения на буквы */
+h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: 0.2em; line-height: 1; }
+.page-hero h1 em { margin-top: 0.12em; line-height: 1; }
+@media (max-width: 720px) {
+  h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: 0.18em; }
+  .page-hero h1 em { margin-top: 0.1em; }
+}
+
+/* v26.1 — у заголовков страниц (h1) запас больше, чем у заголовков блоков */
+.page-hero h1 em { margin-top: 0.32em; }
+@media (max-width: 720px) { .page-hero h1 em { margin-top: 0.26em; } }
+
+/* v26.2 — телефон: запас под рукописной строкой */
+@media (max-width: 720px) {
+  h2 em, .urgent--offer h2 em, .family h2 em, .cta-band h2 em { margin-top: 0.27em; }
+  .page-hero h1 em { margin-top: 0.34em; }
+}
